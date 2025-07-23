@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Transformation: base_link to laser -->
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
+          args="0.15 0 0.13 0 0 0 base_link laser 30" />
+
+    <!-- base_footprint to base_link -->
+    <node pkg="tf" type="static_transform_publisher" name="base_link_broadcaster"
+          args="0 0 0 0 0 0 base_footprint base_link 30" />
+
+    <!-- Launch Iahrs -->
+    <param name="m_bSingle_TF_option" type="bool" value="true" />
+    <node pkg="iahrs_driver" type="iahrs_driver" name="iahrs_driver" output="screen" />
+
+    <!-- Launch YDLidar -->
+    <node name="ydlidar_lidar_publisher" pkg="ydlidar_ros_driver" type="ydlidar_ros_driver_node" output="screen">
+        <param name="port" type="string" value="/dev/ttyYDLidar"/> <!-- 실제 포트에 맞게 수정 -->
+        <param name="baudrate" type="int" value="128000"/>         <!-- 모델에 따라 153600 등으로 변경 가능 -->
+        <param name="frame_id" type="string" value="laser"/>
+        <param name="angle_fixed" type="bool" value="true"/>
+        <param name="auto_reconnect" type="bool" value="true"/>
+        <param name="resolution_fixed" type="bool" value="true"/>
+        <param name="reversion" type="bool" value="false"/>
+        <param name="inverted" type="bool" value="false"/>
+        <param name="low_exposure" type="bool" value="false"/>
+        <param name="single_channel" type="bool" value="false"/>
+        <param name="intensity" type="bool" value="false"/>
+        <param name="support_motor_dtr" type="bool" value="true"/>
+    </node>
+</launch>
+
